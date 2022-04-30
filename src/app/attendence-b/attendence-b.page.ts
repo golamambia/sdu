@@ -673,7 +673,7 @@ importFile(event,index) {
     await alert.present();
 
   }
-  async detailsView(desc,locin,locout,project) {
+  async detailsView(desc: any=null,locin: any=null,locout: any=null,project: any=null) {
     var button_array = [
       { text: 'Project : '+project},
       { text: 'Description : '+desc},
@@ -692,7 +692,7 @@ importFile(event,index) {
     });
     await actionSheet.present();
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: AttendancePopoverComponent,

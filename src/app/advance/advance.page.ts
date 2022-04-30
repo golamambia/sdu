@@ -69,6 +69,8 @@ export class AdvancePage implements OnInit {
  search_category:any='';
  search_status:any='';
  category_list:any='';
+  sub_project:any='';
+subproject_list:any=[];
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -516,7 +518,7 @@ button_array.push({ text: 'Reject reason : '+rejt });
     });
     await actionSheet.present();
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: AdvanceComponent,
@@ -572,5 +574,38 @@ button_array.push({ text: 'Reject reason : '+rejt });
   ]
     
   }
+    async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.search_project='';
+          this.subproject_list=[];
+          this.reloadDepositData();
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 
 }

@@ -594,5 +594,16 @@ if(this.issue_project==''){
 }
   	
   }
-  
+  edit_issue(mid,spid){
+  	this.navCtrl.navigateForward(['/material-issue-edit', {
+  		mid: mid,
+      pid: spid, 
+    }]);
+  } 
+  view_issue(mid,spid){
+  	this.navCtrl.navigateForward(['/material-issue-view', {
+  		mid: mid,
+      pid: spid, 
+    }]);
+  }
 }

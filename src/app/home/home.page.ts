@@ -46,6 +46,10 @@ constructor(
     }
     this.timestamp = Date.now();
    }
+   ngOnInit() {
+    
+   this.storage.create();
+  }
    ionViewWillEnter(){
 
     this.batteryStatus.onChange().subscribe(status => {
@@ -75,10 +79,7 @@ constructor(
    }
 
 
-  ngOnInit() {
-    
   
-  }
 openMenu() {
    this.menu.open();
  }

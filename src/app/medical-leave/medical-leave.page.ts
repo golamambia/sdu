@@ -83,7 +83,7 @@ export class MedicalLeavePage implements OnInit {
  total_leave:any='';
  leave_no:any='';
  leave_type:any='';
- 
+ checkt:number = 0;
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -321,7 +321,7 @@ async selectImage() {
      // console.log(res);
      loading.dismiss();
     if(res.status == true){
-          
+           this.checkt = res.total_leave.med;
       this.total_leave=res.total_leave;
            
       }else{
@@ -368,7 +368,7 @@ async selectImage() {
   getModeval(val){
 //console.log(val);
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: CreateleavegenPopoverComponent,

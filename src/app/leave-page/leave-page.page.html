@@ -80,7 +80,7 @@
               <div class="form-group"  >
                 <label class="time-lable">Date</label>
               
-                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)" [min]="minDate"  displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
+                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)"    displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
               </div>
               
            

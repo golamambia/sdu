@@ -64,7 +64,8 @@ export class UserAttendenseListPage implements OnInit {
  project_list:any='';
  search_project:any='';
  search_date:any='';
- 
+  sub_project:any='';
+subproject_list:any=[];
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -326,7 +327,7 @@ selectDate(dt) {
       index: i, 
     }]);
   }
-  async detailsView(desc,locin,locout,project) {
+  async detailsView(desc=null,locin=null,locout=null,project=null) {
     var button_array = [
       { text: 'Project : '+project},
       { text: 'Description : '+desc},
@@ -345,7 +346,7 @@ selectDate(dt) {
     });
     await actionSheet.present();
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: MyattendancelistPopoverComponent,
@@ -365,5 +366,37 @@ selectDate(dt) {
     /** Sync event from popover component */
 
   }
-
+async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.search_project='';
+          this.subproject_list=[];
+          this.reloadDepositData();
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

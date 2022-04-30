@@ -96,6 +96,11 @@ minTime:any='';
 };
 get_initialamount:any='';
 reject_reason:any='';
+bike_mileage:any='';
+petrol_price:any='';
+cpk:any=0;
+sub_project:any='';
+subproject_list:any=[];
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -142,6 +147,7 @@ reject_reason:any='';
         });
  
 this.getLocation();
+
   }
  onlyNumberKey(event:any) {
     return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57;
@@ -176,9 +182,18 @@ importFile(event,index) {
          
       var headers = new HttpHeaders();
       headers.append('content-type', 'application/json; charset=utf-8');
-if(!this.project){
+if(!this.sub_project){
   this.alertController.create({
     message:'Please select project',
+     buttons: ['OK']
+   }).then(resalert => {
+
+     resalert.present();
+
+   });
+}else if(!this.project){
+  this.alertController.create({
+    message:'Please select sub-project',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -203,7 +218,16 @@ if(!this.project){
      resalert.present();
 
    });
-}else if(!this.expense_amount){
+}else if((this.subcategory==8) && (this.uwe_endkm>0 && this.uwe_startkm>0) && (this.uwe_startkm>=this.uwe_endkm)){
+      this.alertController.create({
+           message: 'Please check start km and end km',
+            buttons: ['OK']
+          }).then(resalert => {
+      
+            resalert.present();
+     
+          });
+    }else if(!this.expense_amount){
   this.alertController.create({
     message:'Please enter amount',
      buttons: ['OK']
@@ -506,9 +530,12 @@ selectChangesub(id) {
       }
       this.http.post(host+'user-work-expense-getbyid', JSON.stringify(data),{ headers: headers })
       .subscribe((res:any) => {
-        console.log(res);
+        //console.log(res);
        loading.dismiss();
       if(res.status == true){
+        let p_slit=res.response_data[0].uwe_project.split('-');
+        this.sub_project=p_slit[0]+'-'+p_slit[1];
+        this.getSubprojectList(this.sub_project);
         this.get_initialamount=res.get_initialamount;
         this.category_list=res.category_list;
 
@@ -533,6 +560,11 @@ selectChangesub(id) {
        this.uwe_startkm=res.response_data[0].uwe_startkm;
        this.uwe_endkm=res.response_data[0].uwe_endkm;
        this.reject_reason=res.response_data[0].uwe_reject;
+       
+       if(res.response_data[0].uwe_subcategory==8){
+         this.checkVersion(res.response_data[0].uwe_checkindate);
+       }
+       
         }else{
       this.category_list=res.category_list;
         this.projecy_list=res.project_list;
@@ -604,7 +636,7 @@ selectChangesub(id) {
       });
   
      }, error => {
-       console.log('ERROR -> ' + JSON.stringify(error));
+       //console.log('ERROR -> ' + JSON.stringify(error));
      });
   }
   async selectImage() {
@@ -654,4 +686,90 @@ selectChangesub(id) {
        console.log('Error getting location', error);
      });
   }
+ 
+ forbike_price(event,subcat){
+    if(event.target.value > 0 && subcat==8){
+     if(this.uwe_endkm>0 && this.uwe_endkm>this.uwe_startkm){
+       let dif=this.uwe_endkm-this.uwe_startkm;
+       this.expense_amount=Math.round(dif*this.cpk);
+     }          
+    }else{
+      this.expense_amount=''
+    }
+    //console.log(subcat);
+  }
+  type_change(event){
+    if(event.target.value!=8){
+       this.expense_amount=''
+          
+    } 
+    //console.log(subcat);
+  }
+  checkVersion(dt){
+  if(this.subcategory==8){
+   var headers = new HttpHeaders();
+  
+  headers.append('content-type', 'application/json; charset=utf-8');
+   var data ={
+          
+    "userId": this.userId,
+     "expense_date":dt,
+  }
+   this.http.post(host+'get-bike-mileprice', JSON.stringify(data),{ headers: headers })
+  .subscribe((res:any) => {
+//console.log(res);
+if(res.status && res.response_data){
+//console.log(res.response_data.st_appversion);
+this.bike_mileage=res.response_data.bike_mileage;
+this.petrol_price=res.response_data.petrol_price;
+if(res.response_data.bike_mileage && res.response_data.petrol_price){
+ this.cpk = res.response_data.petrol_price / res.response_data.bike_mileage;
+//console.log(this.cpk);
+}
+}else{
+  this.alertController.create({
+       message: 'Petrol price & Bike mileage not given for this date, please contact to admin',
+        buttons: ['OK']
+      }).then(resalert => {
+  
+        resalert.present();
+  
+      });
+  this.cpk =0;
+}
+
+  });
+}
+ }
+ async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.subproject_list=[];
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

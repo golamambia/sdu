@@ -96,6 +96,8 @@ page:any;
       //console.log(data);
       if(data){
         this.getUserDetails();
+      }else{
+        //console.log(123);
       }
      
     });
@@ -104,6 +106,8 @@ page:any;
       //console.log(data);
       if(data){
         this.getUserDetails();
+      }else{
+        //console.log(123);
       }
      
     });
@@ -111,9 +115,11 @@ page:any;
  checkVersion(){
    var headers = new HttpHeaders();
   headers.append('content-type', 'application/json; charset=utf-8');
+  headers.append('Access-Control-Allow-Origin', '*');
+ 
    var data ={
           
-    "userId": this.userId,
+    "userId": '',
      //this.password
   }
    this.http.post(host+'get-app-version', JSON.stringify(data),{ headers: headers })
@@ -128,8 +134,10 @@ this.st_downloadlink=res.response_data.st_downloadlink;
  }
   getUserDetails() {
     this.storage.create();
+   // this.storage.remove("genuserDetails");
    this.storage.get("genuserDetails").then(val=>{
       if(val){
+        //console.log(val)
         //this.userDetails = val;
         this.userId=val.ID;
 
@@ -149,6 +157,8 @@ this.st_downloadlink=res.response_data.st_downloadlink;
       if(res.status == true){
        this.userDetails =res.response_data;
         
+        }else{
+          this.userDetails =val;
         }
       }, (err) => {
         //console.log(err);
@@ -157,6 +167,7 @@ this.st_downloadlink=res.response_data.st_downloadlink;
     
 
       }else{
+        this.storage.remove("genuserDetails");
          this.navCtrl.navigateForward('login');
         this.userDetails = null;
        

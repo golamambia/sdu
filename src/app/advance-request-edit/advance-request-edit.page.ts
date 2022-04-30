@@ -96,6 +96,8 @@ minTime:any='';
 };
 get_initialamount:any='';
 reject_reason:any='';
+sub_project:any='';
+subproject_list:any=[];
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -176,9 +178,18 @@ importFile(event,index) {
          
       var headers = new HttpHeaders();
       headers.append('content-type', 'application/json; charset=utf-8');
-if(!this.project){
+if(!this.sub_project){
   this.alertController.create({
     message:'Please select project',
+     buttons: ['OK']
+   }).then(resalert => {
+
+     resalert.present();
+
+   });
+}else if(!this.project){
+  this.alertController.create({
+    message:'Please select sub-project',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -493,6 +504,9 @@ selectChangesub(id) {
        // console.log(res);
        loading.dismiss();
       if(res.status == true){
+        let p_slit=res.response_data[0].uar_project.split('-');
+        this.sub_project=p_slit[0]+'-'+p_slit[1];
+        this.getSubprojectList(this.sub_project);
         this.get_initialamount=res.get_initialamount;
         //this.category_list=res.category_list;
 
@@ -638,4 +652,35 @@ selectChangesub(id) {
        console.log('Error getting location', error);
      });
   }
+     async getSubprojectList(pid){
+  this.project='';
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.subproject_list=[];
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

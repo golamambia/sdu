@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController,NavController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-addexpense-popover',

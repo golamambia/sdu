@@ -142,6 +142,30 @@ const routes: Routes = [
   {
     path: 'material-issue-add',
     loadChildren: () => import('./material-issue-add/material-issue-add.module').then( m => m.MaterialIssueAddPageModule)
+  },
+  {
+    path: 'material-issue-edit',
+    loadChildren: () => import('./material-issue-edit/material-issue-edit.module').then( m => m.MaterialIssueEditPageModule)
+  },
+  {
+    path: 'material-issue-view',
+    loadChildren: () => import('./material-issue-view/material-issue-view.module').then( m => m.MaterialIssueViewPageModule)
+  },
+  {
+    path: 'material-receiving-list',
+    loadChildren: () => import('./material-receiving-list/material-receiving-list.module').then( m => m.MaterialReceivingListPageModule)
+  },
+  {
+    path: 'material-receiving-add',
+    loadChildren: () => import('./material-receiving-add/material-receiving-add.module').then( m => m.MaterialReceivingAddPageModule)
+  },
+  {
+    path: 'material-receiving-edit',
+    loadChildren: () => import('./material-receiving-edit/material-receiving-edit.module').then( m => m.MaterialReceivingEditPageModule)
+  },
+  {
+    path: 'material-receiving-view',
+    loadChildren: () => import('./material-receiving-view/material-receiving-view.module').then( m => m.MaterialReceivingViewPageModule)
   }
 ];
 

@@ -23,15 +23,15 @@
                
             <div>
             <ion-row>
-              <ion-col size="6">
+              <ion-col size="4">
                 <div class="card-box" >
                 <ion-row>
                   <ion-col size="2">
-                <ion-icon class="card-icon" name="calendar-outline"></ion-icon>
+                <ion-icon class="card-iconnw" name="calendar-outline"></ion-icon>
                    </ion-col>
                    <ion-col size="10">
-                <div class="right-box-margin">   <span class="title-today">Today</span> 
-                 <p class="title-date"> {{today |  date: 'dd MMM, yyyy'}}</p>
+                <div class="right-box-marginnw">   <span class="title-todaynw">Today</span> 
+                 <p class="title-datenw"> {{today |  date: 'dd MMM, yyyy'}}</p>
                 </div>
                 </ion-col>
                 </ion-row>
@@ -42,22 +42,36 @@
             </ion-col>
            
                 
-              <ion-col size="6">
+              <ion-col size="4">
                 <div class="card-box" >
                   <ion-row>
                     <ion-col size="2">
-                  <ion-icon class="card-icon" name="wallet-outline"></ion-icon>
+                  <ion-icon class="card-iconnw" name="wallet-outline"></ion-icon>
                      </ion-col>
                      <ion-col size="10">
-                  <div class="right-box-margin">   <span class="title-today">Balance</span> 
-                   <p class="title-date">₹ {{total_amount}}</p>
+                  <div class="right-box-marginnw">   <span class="title-todaynw">Balance</span> 
+                   <p class="title-datenw">₹ {{total_amount}}</p>
                   </div>
                   </ion-col>
                   </ion-row>
                   </div>
                 
                 </ion-col>
-               
+               <ion-col size="4">
+                <div class="card-box" >
+                  <ion-row>
+                    <ion-col size="2">
+                  <ion-icon class="card-iconnw" name="cash-outline"></ion-icon>
+                     </ion-col>
+                     <ion-col size="10">
+                  <div class="right-box-marginnw">   <span class="title-todaynw">Total Expense</span> 
+                   <p class="title-datenw">₹ {{total_expense}}</p>
+                  </div>
+                  </ion-col>
+                  </ion-row>
+                  </div>
+                
+                </ion-col>
                 </ion-row>
               </div>
               <div class="card-box" style="padding-top: 11px;">
@@ -65,9 +79,21 @@
                   <ion-col align-self-center size="6" >
                     <div class="form-group">
                       <label>Project</label>
+                       <select  #SP (change)="getSubprojectList(SP.value)" class="form-control">
+                      <option value="" selected="selected">Select all</option>
+                      <option *ngFor="let val of project_list; let i = index" value="{{val.project_id}}">{{val.project_name+' ('+val.project_id+')'}} </option>
+                    </select>
+                      <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
+                  </div>
+                   
+                  
+             </ion-col>
+              <ion-col align-self-center size="6" >
+                    <div class="form-group">
+                      <label>Sub Project</label>
                        <select #P (change)="selectProject(P.value)" class="form-control" [(ngModel)]="search_project" [ngModelOptions]="{standalone: true}">
                       <option value="" selected="selected">Select all</option>
-                      <option *ngFor="let val of project_list; let i = index" value="{{val.sub_project_id}}">{{val.project_name+' ('+val.project_id+')'}} > {{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
+                      <option *ngFor="let val of subproject_list; let i = index" value="{{val.sub_project_id}}">{{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
                     </select>
                       <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
                   </div>
@@ -78,7 +104,7 @@
               <div class="form-group"  >
                 <label class="time-lable">Date</label>
               
-                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)" [min]="minDate"  displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
+                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)"   displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
               </div>
               
            
@@ -111,6 +137,7 @@
         </div>
                
         </ion-col>
+        
         </ion-row>
            </div>
             

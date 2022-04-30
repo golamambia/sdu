@@ -19,13 +19,22 @@
           <div padding style="margin-top: 15px;">
             <div class="form-group">
               <label>Project</label>
-               <select class="form-control" [(ngModel)]="project" [ngModelOptions]="{standalone: true}">
+               <select class="form-control" [(ngModel)]="sub_project" [ngModelOptions]="{standalone: true}" #SP (change)="getSubprojectList(SP.value)">
               <option value="" selected="selected">Select one</option>
-              <!-- <option *ngFor="let val of projecy_list; let i = index" value="{{val.ID}}">{{val.project_id}} > {{val.sub_project_id}}</option> -->
-              <option *ngFor="let val of projecy_list; let i = index" value="{{val.sub_project_id}}">{{val.project_name+' ('+val.project_id+')'}} > {{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
+              <option *ngFor="let val of projecy_list; let i = index" value="{{val.project_id}}">{{val.project_name+' ('+val.project_id+')'}}   </option>
+              
             </select>
               <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
-          </div> 
+          </div>
+          <div class="form-group">
+              <label>Sub Project</label>
+               <select class="form-control" [(ngModel)]="project" [ngModelOptions]="{standalone: true}">
+              <option value="" selected="selected">Select one</option>
+              <option *ngFor="let val of subproject_list; let i = index" value="{{val.sub_project_id}}"> {{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
+             
+            </select>
+              <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
+          </div>
           <div class="form-group">
             <label>Attendance category</label>
              <select class="form-control" #C (change)="selectChange(C.value)" [(ngModel)]="category" [ngModelOptions]="{standalone: true}">

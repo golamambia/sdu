@@ -82,6 +82,8 @@ export class AttendenceBAddPage implements OnInit {
   maximumImagesCount: 1,
   quality: 50
 };
+sub_project:any='';
+subproject_list:any=[];
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -177,9 +179,18 @@ importFile(event,index) {
        
     var headers = new HttpHeaders();
     headers.append('content-type', 'application/json; charset=utf-8');
-if(!this.project){
+if(!this.sub_project){
   this.alertController.create({
     message:'Please select project',
+     buttons: ['OK']
+   }).then(resalert => {
+
+     resalert.present();
+
+   });
+}else if(!this.project){
+  this.alertController.create({
+    message:'Please select sub-project',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -303,7 +314,7 @@ else{
 			});
 
  		}, error => {
- 			console.log('ERROR -> ' + JSON.stringify(error));
+ 			//console.log('ERROR -> ' + JSON.stringify(error));
  		});
 	}
   imageViewer(imageToView,text=''){
@@ -453,7 +464,7 @@ async getcategoryList(){
         +','+result[0].administrativeArea +','+result[0].countryName;
 			}).catch((error: any) => console.log(error));
      }).catch((error) => {
-       console.log('Error getting location', error);
+       //console.log('Error getting location', error);
      });
   }
   getDropDownText2(id, object){
@@ -473,7 +484,7 @@ getDropDownText(id, object){
 selectChange(id) {
 
   this.category_text = this.getDropDownText(id, this.category_list)[0].ac_name;
-  console.log(this.category_text);
+  //console.log(this.category_text);
   
 }
 async getLocationRel(){
@@ -502,8 +513,38 @@ async getLocationRel(){
       );
      }).catch((error) => {
         loading.dismiss();
-       console.log('Error getting location', error);
+      // console.log('Error getting location', error);
      });
   }
-
+ async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.subproject_list=[];
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

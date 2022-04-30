@@ -81,6 +81,7 @@ export class GeneraleLeavePage implements OnInit {
  total_leave:any='';
  leave_no:any='';
  leave_type:any='';
+ checkt:number = 0;
  
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
@@ -288,10 +289,11 @@ else{
     }
     this.http.post(host+'user-leave-application-get', JSON.stringify(data),{ headers: headers })
     .subscribe((res:any) => {
-     // console.log(res);
+      console.log(res.total_leave.gen);
      loading.dismiss();
+     
     if(res.status == true){
-          
+          this.checkt = res.total_leave.gen;
       this.total_leave=res.total_leave;
            
       }else{
@@ -338,7 +340,7 @@ else{
   getModeval(val){
 //console.log(val);
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: CreateleavegenPopoverComponent,

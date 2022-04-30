@@ -7,13 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { AttendenceExpenseAddPageRoutingModule } from './attendence-expense-add-routing.module';
 
 import { AttendenceExpenseAddPage } from './attendence-expense-add.page';
-
+import { AddexpensePopoverComponent } from '../component/addexpense-popover/addexpense-popover.component';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AttendenceExpenseAddPageRoutingModule
+    AttendenceExpenseAddPageRoutingModule, 
+     
   ],
   declarations: [AttendenceExpenseAddPage]
 })

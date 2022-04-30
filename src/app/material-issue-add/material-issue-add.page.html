@@ -15,9 +15,9 @@
 
 
 <ion-content>
-  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200">
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200">
     <ion-refresher-content style="margin-top: 150px;"></ion-refresher-content>
-  </ion-refresher>
+  </ion-refresher> -->
     <ion-grid>
       
                
@@ -133,17 +133,17 @@
                             
                           </ion-row>
                           <ion-row>
-                            <ion-col size="4" >
+                            <ion-col size="6" >
                               <h2 class="list-title"><span class="smspan">Available Qty</span><br>
                               {{(inneritem.quantity-inneritem.quantity_consumed)}} {{inneritem.uom_name}}
                               </h2>
                             </ion-col>
-                            <ion-col size="4" >
+                            <!-- <ion-col size="4" >
                               <h2 class="list-title"><span class="smspan">Issued Qty</span><br>
                                 {{inneritem.grn_srn_ref_id}}
                               </h2>
-                            </ion-col>
-                            <ion-col size="4" >
+                            </ion-col> -->
+                            <ion-col size="6" >
                               <h2 class="list-title"><span class="smspan">GRN Ref No </span><br>
                                   {{inneritem.grn_srn_ref_id}}
                               </h2>

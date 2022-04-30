@@ -94,6 +94,12 @@ export class AttendenceExpenseAddPage implements OnInit {
   maximumImagesCount: 1,
   quality: 50
 };
+bike_mileage:any='';
+petrol_price:any='';
+cpk:any=0;
+sub_project:any='';
+subproject_list:any=[];
+amt_note:any='';
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -138,6 +144,7 @@ export class AttendenceExpenseAddPage implements OnInit {
         }
       });
 this.getLocation();
+
   }
  onlyNumberKey(event:any) {
     return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57;
@@ -150,7 +157,7 @@ setMainTime(){
 //console.log(this.start_timenw)
 }
 importFile(event,index) {
-  console.log(event);
+  //console.log(event);
     if (event.target.files && event.target.files.length > 0) {
       let files = event.target.files || event.dataTransfer.files;
       if (!files.length)
@@ -178,9 +185,18 @@ importFile(event,index) {
        
     var headers = new HttpHeaders();
     headers.append('content-type', 'application/json; charset=utf-8');
-if(!this.project){
+if(!this.sub_project){
   this.alertController.create({
     message:'Please select project',
+     buttons: ['OK']
+   }).then(resalert => {
+
+     resalert.present();
+
+   });
+}else if(!this.project){
+  this.alertController.create({
+    message:'Please select sub-project',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -199,6 +215,15 @@ if(!this.project){
 }else if(!this.subcategory){
   this.alertController.create({
     message:'Please select type',
+     buttons: ['OK']
+   }).then(resalert => {
+
+     resalert.present();
+
+   });
+}else if(!this.expense_date){
+  this.alertController.create({
+    message:'Please select date',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -224,7 +249,16 @@ else if((this.subcategory==8 || this.subcategory==20) && !this.uwe_startkm){
      resalert.present();
 
    });
-}
+}else if((this.subcategory==8 || this.subcategory==20) && (this.uwe_endkm>0 && this.uwe_startkm>0) && (this.uwe_startkm>=this.uwe_endkm)){
+      this.alertController.create({
+           message: 'Please check start km and end km',
+            buttons: ['OK']
+          }).then(resalert => {
+      
+            resalert.present();
+     
+          });
+    }
 else if(this.category==1 && !this.uwe_from){
   this.alertController.create({
     message:'Please enter from',
@@ -264,15 +298,6 @@ else if(this.category==1 && !this.uwe_from){
 }else if(this.category==11 && !this.uwe_where){
   this.alertController.create({
     message:'Please enter where',
-     buttons: ['OK']
-   }).then(resalert => {
-
-     resalert.present();
-
-   });
-}else if(!this.expense_date){
-  this.alertController.create({
-    message:'Please select date',
      buttons: ['OK']
    }).then(resalert => {
 
@@ -330,7 +355,7 @@ else{
     uwe_where : this.uwe_where,
     subcategory_text : splitted2[0].ec_name,
         expense_amount : this.expense_amount,
-				work_description : this.work_description,
+				work_description : this.work_description+' '+this.amt_note,
         depositImage:this.depositImage,
         address:this.address,
         expense_date:this.expense_date,
@@ -364,6 +389,7 @@ else{
         
    
           this.project='';
+          this.sub_project='';
           this.category='';
           this.category_text='';
           this.subcategory='';
@@ -584,7 +610,7 @@ getDropDownTextsub(id, object){
 selectChangesub(id) {
 //this.getsubcategoryList();
   this.subcategory_text = this.getDropDownTextsub(id, this.subcategory_list)[0].ec_name;
-  console.log(this.subcategory_text);
+ // console.log(this.subcategory_text);
   
 }
 
@@ -610,7 +636,7 @@ deposit_slip_image(sourceType){
     });
 
    }, error => {
-     console.log('ERROR -> ' + JSON.stringify(error));
+     //console.log('ERROR -> ' + JSON.stringify(error));
    });
 }
 async selectImage() {
@@ -657,7 +683,7 @@ async selectImage() {
         +','+result[0].administrativeArea +','+result[0].countryName;
 			}).catch((error: any) => console.log(error));
      }).catch((error) => {
-       console.log('Error getting location', error);
+       //console.log('Error getting location', error);
      });
   }
   async getLocationRel(){
@@ -686,10 +712,10 @@ async selectImage() {
       );
      }).catch((error) => {
         loading.dismiss();
-       console.log('Error getting location', error);
+      // console.log('Error getting location', error);
      });
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: AddexpensePopoverComponent,
@@ -709,4 +735,123 @@ async selectImage() {
     /** Sync event from popover component */
 
   }
+  
+ forbike_price(event,subcat){
+    if(event.target.value > 0 && subcat==8){
+     if(this.uwe_endkm>0 && this.uwe_endkm>this.uwe_startkm){
+       let dif=this.uwe_endkm-this.uwe_startkm;
+       this.expense_amount=Math.round(dif*this.cpk);
+       this.amt_note='Note : ('+this.expense_amount+') =P('+this.petrol_price+') / M('+this.bike_mileage+') × Km('+dif+')';
+     }          
+    }else{
+      this.expense_amount='';
+      this.amt_note='';
+    }
+    //console.log(subcat);
+  }
+  type_change(event){
+    this.uwe_startkm='';
+    this.uwe_endkm='';
+    if(event.target.value!=8){
+       this.expense_amount=''
+         this.amt_note=''; 
+    }else{
+      if(this.expense_date){
+      var dt=this.datePipe.transform(this.expense_date, 'Y-MM-dd');
+  //this.search_date = this.datePipe.transform(dt, 'Y-MM-dd');
+  //console.log(dt);
+  //this.reloadDepositData();
+  this.checkVersion(dt);
+}
+    } 
+    //console.log(subcat);
+  }
+  selectDate(value) {
+if(this.subcategory){
+var dt=this.datePipe.transform(value, 'Y-MM-dd');
+  //this.search_date = this.datePipe.transform(dt, 'Y-MM-dd');
+  //console.log(dt);
+  //this.reloadDepositData();
+  this.checkVersion(dt);
+}else{
+    //this.expense_date='';
+  this.alertController.create({
+       message: 'Please select type',
+        buttons: ['OK']
+      }).then(resalert => {
+  
+        resalert.present();
+  
+      });
+
+}
+}
+checkVersion(dt){
+  if(this.subcategory==8){
+   var headers = new HttpHeaders();
+  
+  headers.append('content-type', 'application/json; charset=utf-8');
+   var data ={
+          
+    "userId": this.userId,
+     "expense_date":dt,
+  }
+   this.http.post(host+'get-bike-mileprice', JSON.stringify(data),{ headers: headers })
+  .subscribe((res:any) => {
+//console.log(res);
+if(res.status && res.response_data){
+//console.log(res.response_data.st_appversion);
+this.bike_mileage=res.response_data.bike_mileage;
+this.petrol_price=res.response_data.petrol_price;
+if(res.response_data.bike_mileage && res.response_data.petrol_price){
+ this.cpk = res.response_data.petrol_price / res.response_data.bike_mileage;
+//console.log(this.cpk);
+
+}
+}else{
+  this.alertController.create({
+       message: 'Petrol price & Bike mileage not given for this date, please contact to admin',
+        buttons: ['OK']
+      }).then(resalert => {
+  
+        resalert.present();
+  
+      });
+  this.cpk =0;
+}
+
+  });
+}
+ }
+ async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.subproject_list=[];
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

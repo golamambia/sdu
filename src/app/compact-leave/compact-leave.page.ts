@@ -340,7 +340,7 @@ else{
   getModeval(val){
 //console.log(val);
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: CreateleavegenPopoverComponent,

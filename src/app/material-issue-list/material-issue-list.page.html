@@ -104,7 +104,7 @@
               <div class="form-group"  >
                 <label class="time-lable">Date</label>
               
-                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)" [min]="minDate"  displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
+                <ion-datetime [pickerOptions]="customPickerOptionFrom" #D (ionChange)="selectDate(D.value)" class="form-control" placeholder="Date (D/M/Y)"    displayFormat="DD/MMM/YYYY"  [(ngModel)]="search_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
               </div>
               
            
@@ -143,11 +143,11 @@
                 <div *ngFor="let inneritem of depositData; let i = index" class="card-box" style="padding-left: 0;">
                   
                     <ion-row >
-                      <ion-col size="1" class="active-col">
+                      <!-- <ion-col size="1" class="active-col">
                         <h4 class="status-title" style="text-transform: capitalize;"><ion-badge class="ion-badge-suc">{{inneritem.status}}</ion-badge>
                           </h4>
-                      </ion-col>
-                      <ion-col size="11" style="padding-left:11px">
+                      </ion-col> -->
+                      <ion-col size="12" style="padding-left:11px">
                       <ion-label class="nomargin">  
                           <ion-row  >
                             <ion-col size="6">
@@ -181,7 +181,7 @@
                               </h2>
                             </ion-col>
                                    <ion-col size="5">
-                                <ion-button color="warning" expand="block" size="small" fill="outline" (click)="edit_expense()">
+                                <ion-button color="warning" expand="block" size="small" fill="outline" (click)="edit_issue(inneritem.material_issue_referencec_id,inneritem.sub_project_id)">
                                   <ion-icon slot="start" name="create-outline"></ion-icon>
                                   Edit
                                 </ion-button>
@@ -189,7 +189,7 @@
                     
                               </ion-col>
                               <ion-col size="5" >
-                                <ion-button expand="block" size="small" fill="outline" color="primary" (click)="remove_expense()">
+                                <ion-button expand="block" size="small" fill="outline" color="primary" (click)="view_issue(inneritem.material_issue_referencec_id,inneritem.sub_project_id)">
                                   <ion-icon slot="start" name="eye-outline"></ion-icon>
                                   View
                                 </ion-button>

@@ -85,6 +85,8 @@ minTime:any='';
  uwe_to:any='';
  uwe_where:any='';
  expense_date:any='';
+ uwe_startkm:any='';
+ uwe_endkm:any='';
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,

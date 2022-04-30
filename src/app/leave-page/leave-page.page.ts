@@ -325,7 +325,7 @@ export class LeavePagePage implements OnInit {
     });
     await actionSheet.present();
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: SettingComponent,

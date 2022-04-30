@@ -24,14 +24,22 @@
           <div padding style="margin-top: 15px;">
             <div class="form-group">
               <label>Project</label>
-               <select class="form-control" [(ngModel)]="project" [ngModelOptions]="{standalone: true}">
+               <select class="form-control" [(ngModel)]="sub_project" [ngModelOptions]="{standalone: true}" #SP (change)="getSubprojectList(SP.value)">
               <option value="" selected="selected">Select one</option>
-              <option *ngFor="let val of projecy_list; let i = index" value="{{val.sub_project_id}}">{{val.project_name+' ('+val.project_id+')'}} > {{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
-              <!-- <option *ngFor="let val of projecy_list; let i = index" value="{{val.ID}}">{{val.project_id}} > {{val.sub_project_id}}</option> -->
+              <option *ngFor="let val of projecy_list; let i = index" value="{{val.project_id}}">{{val.project_name+' ('+val.project_id+')'}}   </option>
+              
             </select>
               <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
           </div>
- 
+          <div class="form-group">
+              <label>Sub Project</label>
+               <select class="form-control" [(ngModel)]="project" [ngModelOptions]="{standalone: true}">
+              <option value="" selected="selected">Select one</option>
+              <option *ngFor="let val of subproject_list; let i = index" value="{{val.sub_project_id}}"> {{val.sub_project_name+' ('+val.sub_project_id+')'}}  </option>
+             
+            </select>
+              <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
+          </div>
     <div class="form-group">
       <label>Expense category</label>
        <select class="form-control" #C (change)="selectChange(C.value)" [(ngModel)]="category" [ngModelOptions]="{standalone: true}">
@@ -42,21 +50,26 @@
   </div>
   <div class="form-group">
     <label>Type</label>
-     <select class="form-control"  [(ngModel)]="subcategory" [ngModelOptions]="{standalone: true}">
+     <select class="form-control"  [(ngModel)]="subcategory" [ngModelOptions]="{standalone: true}" (change)="type_change($event)">
     <option value="" selected="selected">Select type</option>
     <option *ngFor="let val of subcategory_list; let i = index" value="{{val.ec_ID}}">{{val.ec_name}}</option>
   </select>
     <div class="arrow"><img src="assets/images/select-arrow.png" alt="select arrow" title="" /></div>
 </div>
+<div class="form-group"  >
+  <label class="time-lable">Expense Date</label>
+
+  <ion-datetime class="form-control" placeholder="Date (D/M/Y)" [min]="minDate" [max]="maxDate" displayFormat="DD/MMM/YYYY" #DT (ionChange)="selectDate(DT.value)" [(ngModel)]="expense_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
+</div>
 <div class="form-group" *ngIf="subcategory==8 || subcategory==20">
   <label>Start Km</label>
 
-  <input type="text" [(ngModel)]="uwe_startkm" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="" >
+  <input type="number" [(ngModel)]="uwe_startkm" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="" (keypress)="forbike_price($event,(subcategory))" (keyup)="forbike_price($event,(subcategory))">
 </div>
 <div class="form-group"  *ngIf="subcategory==8 || subcategory==20">
   <label>End Km</label>
 
-  <input type="text" [(ngModel)]="uwe_endkm" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="" >
+  <input type="number" [(ngModel)]="uwe_endkm" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="" (keypress)="forbike_price($event,(subcategory))" (keyup)="forbike_price($event,(subcategory))">
 </div>
 <div class="form-group"   *ngIf="category==1">
   <label>From</label>
@@ -78,11 +91,7 @@
 
   <input type="text" [(ngModel)]="uwe_where" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="" >
 </div>
-<div class="form-group"  >
-  <label class="time-lable">Expense Date</label>
 
-  <ion-datetime class="form-control" placeholder="Date (D/M/Y)" [min]="minDate" [max]="maxDate" displayFormat="DD/MMM/YYYY"  [(ngModel)]="expense_date" [ngModelOptions]="{standalone: true}" ></ion-datetime>
-</div>
 <div class="form-group">
   <label>Description</label>
 
@@ -90,7 +99,10 @@
 </div>      
 <div class="form-group">
   <label class="time-lable">Amount</label>
-  <ion-input class="form-control"  type="number" maxlength="10" [(ngModel)]="expense_amount" [ngModelOptions]="{standalone: true}"></ion-input>
+  <ion-input class="form-control"  type="number" maxlength="10" [(ngModel)]="expense_amount" [ngModelOptions]="{standalone: true}" style="pointer-events: {{subcategory==8?'none':''}}"></ion-input>
+  <div style="font-size: 12px;
+    font-weight: 600;
+    color: #0d1b65;">{{amt_note}}</div>
 </div> 
 
 <!-- <ion-item>

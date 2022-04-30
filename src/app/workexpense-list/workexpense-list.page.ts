@@ -69,6 +69,9 @@ export class WorkexpenseListPage implements OnInit {
  search_category:any='';
  search_status:any='';
  category_list:any='';
+ sub_project:any='';
+subproject_list:any=[];
+total_expense:any=0;
  constructor(private http: HttpClient, public navCtrl: NavController,
     public storage: Storage,public loadingController: LoadingController,
     public alertController: AlertController,
@@ -118,7 +121,7 @@ export class WorkexpenseListPage implements OnInit {
   }
 
   async reloadDepositData(){
- 
+ this.total_expense=0;
       //console.log(this.userId);
       
       const loading = await this.loadingController.create({
@@ -143,13 +146,16 @@ export class WorkexpenseListPage implements OnInit {
         }
         this.http.post(host+'user-work-expense-get', JSON.stringify(data),{ headers: headers })
         .subscribe((res:any) => {
-         console.log(res);
+         //console.log(res);
          loading.dismiss();
         if(res.status == true){
          
            this.depositData=res.response_data;
           this.total_amount=res.total_amount;
-          
+          this.depositData.forEach((value,key) => {
+         this.total_expense +=parseInt(value.uwe_amount);
+          }
+            );
          
           }else{
             this.depositData=res.response_data;
@@ -516,7 +522,7 @@ button_array.push({ text: 'Reject reason : '+rejt });
     });
     await actionSheet.present();
   }
-  async settingsPopover(ev: any) {
+  async settingsPopover(ev: any=null) {
     const siteInfo = { id: 1, name: 'edupala' };
     const popover = await this.popoverController.create({
       component: ExpenselistPopoverComponent,
@@ -572,4 +578,37 @@ button_array.push({ text: 'Reject reason : '+rejt });
   ]
     
   }
+   async getSubprojectList(pid){
+  
+    const loading = await this.loadingController.create({
+        message: ''
+      });
+      var headers = new HttpHeaders();
+      headers.append('content-type', 'application/json; charset=utf-8');
+    
+      var data ={
+        
+        "userid": this.userId,
+        "project": pid,
+       
+      }
+      this.http.post(host+'user-sub-project-get', JSON.stringify(data),{ headers: headers })
+      .subscribe((res:any) => {
+        //console.log(res);
+       loading.dismiss();
+      if(res.status == true){
+       
+         this.subproject_list=res.response_data;
+        
+        }else{
+          this.search_project='';
+          this.subproject_list=[];
+          this.reloadDepositData();
+        } 
+      }, (err) => {
+        //console.log(err);
+        loading.dismiss();
+      });
+  
+}
 }

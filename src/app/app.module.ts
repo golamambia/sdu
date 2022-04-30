@@ -25,10 +25,24 @@ import { Network } from '@ionic-native/network/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { ExpenselistPopoverComponent } from './component/expenselist-popover/expenselist-popover.component';
+import { AddexpensePopoverComponent } from './component/addexpense-popover/addexpense-popover.component';
+import { AdvanceAddComponent } from './component/advance-add/advance-add.component';
+import { AdvanceComponent } from './component/advance/advance.component';
+import { CreateleavegenPopoverComponent } from './component/createleavegen-popover/createleavegen-popover.component';
+import { SettingComponent } from './component/setting/setting.component';
+import { ReturnrequestPopoverComponent } from './component/returnrequest-popover/returnrequest-popover.component';
+import { MyattendancelistPopoverComponent } from './component/myattendancelist-popover/myattendancelist-popover.component';
+import { AttendancePopoverComponent } from './component/attendance-popover/attendance-popover.component';
+import { WalletPopoverComponent } from './component/wallet-popover/wallet-popover.component';
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,ExpenselistPopoverComponent,AddexpensePopoverComponent,
+  AdvanceAddComponent,AdvanceComponent,CreateleavegenPopoverComponent,SettingComponent,
+  ReturnrequestPopoverComponent,MyattendancelistPopoverComponent,AttendancePopoverComponent
+  ,WalletPopoverComponent
+  ],
   entryComponents: [],
   imports: [
   BrowserModule, IonicModule.forRoot(), AppRoutingModule,HttpClientModule,
